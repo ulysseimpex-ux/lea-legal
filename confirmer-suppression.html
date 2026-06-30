@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirmer la suppression — Léa</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #faf6ee;
+      --green: #1B4D3E;
+      --green-light: #2a6b56;
+      --text: #1c1814;
+      --text-secondary: #5a534a;
+      --border: #e0d8cc;
+      --danger: #b3261e;
+      --danger-light: #cf3b32;
+      --max-width: 720px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 17px;
+      line-height: 1.75;
+      padding: 0 20px;
+    }
+
+    header {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 48px 0 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-family: Georgia, serif;
+      font-size: 28px;
+      font-weight: normal;
+      color: var(--green);
+      letter-spacing: 0.02em;
+      margin-bottom: 24px;
+    }
+
+    header h1 {
+      font-size: 22px;
+      font-weight: normal;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    main {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 40px 0 80px;
+    }
+
+    .danger {
+      background: rgba(179, 38, 30, 0.06);
+      border-left: 3px solid var(--danger);
+      border-radius: 0 4px 4px 0;
+      padding: 18px 22px;
+      margin-bottom: 28px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 16px;
+      line-height: 1.65;
+    }
+
+    .danger strong { color: var(--danger); }
+
+    button {
+      background: var(--danger);
+      color: #faf6ee;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      padding: 12px 22px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    button:hover { background: var(--danger-light); }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .message {
+      padding: 16px 20px;
+      background: rgba(27, 77, 62, 0.06);
+      border-left: 3px solid var(--green);
+      border-radius: 0 4px 4px 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--text);
+    }
+
+    .message.error {
+      background: rgba(179, 38, 30, 0.06);
+      border-left-color: var(--danger);
+    }
+
+    #inline-message { margin-top: 22px; }
+
+    .action {
+      margin-top: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 15px;
+    }
+
+    a {
+      color: var(--green);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    a:hover { color: var(--green-light); }
+
+    .hidden { display: none; }
+
+    footer {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 24px 0 48px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    @media (max-width: 600px) {
+      body { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Léa</div>
+  <h1>Confirmer la suppression de votre compte</h1>
+</header>
+
+<main>
+
+  <!-- État 1 : lien sans token -->
+  <section id="no-token-screen" class="hidden">
+    <div class="message error">
+      Ce lien est invalide ou incomplet. Aucun jeton de confirmation n'a été trouvé
+      dans l'adresse.
+    </div>
+    <p class="action">
+      <a href="/suppression-compte">Faire une nouvelle demande de suppression</a>
+    </p>
+  </section>
+
+  <!-- État 2 : confirmation (token présent, aucun appel API tant que l'utilisateur n'a pas cliqué) -->
+  <section id="confirm-screen" class="hidden">
+    <div class="danger">
+      Vous êtes sur le point de supprimer <strong>définitivement</strong> votre compte
+      Léa et toutes vos données (romans, chapitres, personnages, conversations).
+      <strong>Cette action est irréversible.</strong>
+    </div>
+    <button type="button" id="confirm-btn">Confirmer la suppression</button>
+    <div id="inline-message" class="message error hidden" role="status" aria-live="polite"></div>
+  </section>
+
+  <!-- État 3 : résultat final -->
+  <section id="result-screen" class="hidden">
+    <div id="result-message" class="message" role="status" aria-live="polite"></div>
+    <p id="result-action" class="action hidden">
+      <a href="/suppression-compte">Faire une nouvelle demande de suppression</a>
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  © 2026 Léa — Fabrice Alessi · <a href="mailto:leavotreplume@gmail.com">leavotreplume@gmail.com</a>
+</footer>
+
+<script>
+  (function () {
+    "use strict";
+
+    var API = "https://api-server-production-f1dc.up.railway.app/api/auth/delete-account-by-token";
+
+    var noTokenScreen = document.getElementById("no-token-screen");
+    var confirmScreen = document.getElementById("confirm-screen");
+    var resultScreen = document.getElementById("result-screen");
+    var confirmBtn = document.getElementById("confirm-btn");
+    var inlineMessage = document.getElementById("inline-message");
+    var resultMessage = document.getElementById("result-message");
+    var resultAction = document.getElementById("result-action");
+
+    var token = new URLSearchParams(window.location.search).get("token");
+
+    var ERROR_MESSAGES = {
+      token_expired:
+        "Ce lien a expiré. Pour des raisons de sécurité, les liens de suppression " +
+        "ont une durée de validité limitée. Vous pouvez faire une nouvelle demande.",
+      token_invalid:
+        "Ce lien est invalide. Vérifiez que vous avez bien copié l'adresse complète, " +
+        "ou faites une nouvelle demande.",
+      token_already_used:
+        "Ce compte a déjà été supprimé : ce lien de confirmation a déjà été utilisé."
+    };
+
+    // Le token n'est jamais injecté dans le HTML (anti-XSS), uniquement envoyé
+    // dans le corps de la requête.
+    if (!token) {
+      noTokenScreen.classList.remove("hidden");
+      return;
+    }
+    confirmScreen.classList.remove("hidden");
+
+    function showResult(text, isError, showNewRequestLink) {
+      confirmScreen.classList.add("hidden");
+      resultMessage.textContent = text;
+      resultMessage.classList.toggle("error", !!isError);
+      resultAction.classList.toggle("hidden", !showNewRequestLink);
+      resultScreen.classList.remove("hidden");
+    }
+
+    function showInline(text) {
+      inlineMessage.textContent = text;
+      inlineMessage.classList.remove("hidden");
+    }
+
+    function resetButton() {
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = "Confirmer la suppression";
+    }
+
+    confirmBtn.addEventListener("click", function () {
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = "Suppression en cours…";
+      inlineMessage.classList.add("hidden");
+
+      fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: token })
+      })
+        .then(function (res) {
+          if (res.status === 200) {
+            showResult(
+              "Votre compte a été supprimé définitivement. Toutes vos données ont " +
+              "été effacées. Merci d'avoir utilisé Léa.",
+              false,
+              false
+            );
+            return;
+          }
+
+          // Erreurs : lire le code { error } renvoyé par le backend.
+          return res.json().then(
+            function (data) { handleError(data && data.error); },
+            function () { handleError(null); }
+          );
+        })
+        .catch(function () {
+          resetButton();
+          showInline(
+            "Impossible de contacter le serveur. Vérifiez votre connexion et réessayez."
+          );
+        });
+    });
+
+    function handleError(code) {
+      if (code === "token_expired") {
+        showResult(ERROR_MESSAGES.token_expired, true, true);
+      } else if (code === "token_invalid") {
+        showResult(ERROR_MESSAGES.token_invalid, true, true);
+      } else if (code === "token_already_used") {
+        showResult(ERROR_MESSAGES.token_already_used, true, false);
+      } else {
+        // 500 / invalid payload / cas inattendu : réessayable.
+        resetButton();
+        showInline("Une erreur est survenue. Veuillez réessayer plus tard.");
+      }
+    }
+  })();
+</script>
+
+</body>
+</html>

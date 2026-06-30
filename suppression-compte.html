@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supprimer mon compte — Léa</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #faf6ee;
+      --green: #1B4D3E;
+      --green-light: #2a6b56;
+      --text: #1c1814;
+      --text-secondary: #5a534a;
+      --border: #e0d8cc;
+      --danger: #b3261e;
+      --max-width: 720px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 17px;
+      line-height: 1.75;
+      padding: 0 20px;
+    }
+
+    header {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 48px 0 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-family: Georgia, serif;
+      font-size: 28px;
+      font-weight: normal;
+      color: var(--green);
+      letter-spacing: 0.02em;
+      margin-bottom: 24px;
+    }
+
+    header h1 {
+      font-size: 22px;
+      font-weight: normal;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    main {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 40px 0 80px;
+    }
+
+    .intro {
+      margin-bottom: 28px;
+      color: var(--text);
+    }
+
+    form {
+      max-width: 440px;
+    }
+
+    label {
+      display: block;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      letter-spacing: 0.01em;
+    }
+
+    input[type="email"] {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: var(--text);
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+
+    input[type="email"]:focus {
+      outline: none;
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(27, 77, 62, 0.12);
+    }
+
+    button {
+      margin-top: 18px;
+      background: var(--green);
+      color: #faf6ee;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      padding: 12px 22px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    button:hover { background: var(--green-light); }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .message {
+      margin-top: 28px;
+      padding: 16px 20px;
+      background: rgba(27, 77, 62, 0.06);
+      border-left: 3px solid var(--green);
+      border-radius: 0 4px 4px 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--text);
+    }
+
+    .message.error {
+      background: rgba(179, 38, 30, 0.06);
+      border-left-color: var(--danger);
+    }
+
+    a {
+      color: var(--green);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    a:hover { color: var(--green-light); }
+
+    .hidden { display: none; }
+
+    footer {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 24px 0 48px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    @media (max-width: 600px) {
+      body { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Léa</div>
+  <h1>Supprimer mon compte</h1>
+</header>
+
+<main>
+  <p class="intro">
+    Vous pouvez demander la suppression définitive de votre compte Léa et de toutes
+    les données associées (romans, chapitres, personnages, conversations) directement
+    depuis cette page, même si vous n'avez plus l'application installée.
+  </p>
+  <p class="intro">
+    Saisissez l'adresse email de votre compte ci-dessous. Si un compte existe, vous
+    recevrez un email contenant un lien de confirmation. La suppression n'est effective
+    qu'après avoir cliqué sur ce lien.
+  </p>
+
+  <form id="form" novalidate>
+    <label for="email">Adresse email de votre compte</label>
+    <input
+      type="email"
+      id="email"
+      name="email"
+      required
+      autocomplete="email"
+      placeholder="vous@exemple.com"
+    >
+    <button type="submit" id="submit">Demander la suppression</button>
+  </form>
+
+  <div id="message" class="message hidden" role="status" aria-live="polite"></div>
+</main>
+
+<footer>
+  © 2026 Léa — Fabrice Alessi · <a href="mailto:leavotreplume@gmail.com">leavotreplume@gmail.com</a>
+</footer>
+
+<script>
+  (function () {
+    "use strict";
+
+    var API = "https://api-server-production-f1dc.up.railway.app/api/auth/request-account-deletion";
+
+    var form = document.getElementById("form");
+    var emailInput = document.getElementById("email");
+    var submitBtn = document.getElementById("submit");
+    var message = document.getElementById("message");
+
+    function showMessage(text, isError) {
+      message.textContent = text;
+      message.classList.remove("hidden");
+      message.classList.toggle("error", !!isError);
+    }
+
+    function resetButton() {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Demander la suppression";
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      var email = emailInput.value.trim();
+      if (!email || !emailInput.checkValidity()) {
+        showMessage("Veuillez saisir une adresse email valide.", true);
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Envoi en cours…";
+      message.classList.add("hidden");
+
+      fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email })
+      })
+        .then(function (res) {
+          if (res.status === 200) {
+            // Anti-énumération : message neutre identique, que le compte existe ou non.
+            form.classList.add("hidden");
+            showMessage(
+              "Si un compte existe avec cet email, un lien de confirmation vient de " +
+              "vous être envoyé. Vérifiez votre boîte mail (et vos spams).",
+              false
+            );
+          } else {
+            resetButton();
+            showMessage("Une erreur est survenue. Veuillez réessayer plus tard.", true);
+          }
+        })
+        .catch(function () {
+          resetButton();
+          showMessage(
+            "Impossible de contacter le serveur. Vérifiez votre connexion et réessayez.",
+            true
+          );
+        });
+    });
+  })();
+</script>
+
+</body>
+</html>
