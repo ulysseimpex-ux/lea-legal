@@ -173,7 +173,7 @@
 <header>
   <div class="logo">Léa</div>
   <h1>Politique de confidentialité</h1>
-  <p class="date">Dernière mise à jour : 29 juin 2026</p>
+  <p class="date">Dernière mise à jour : 26 octobre 2026</p>
 </header>
 
 <main>
@@ -192,9 +192,8 @@
       <li>Adresse email</li>
       <li>Mot de passe (stocké sous forme chiffrée, jamais en clair)</li>
       <li>Nom d'auteur (pseudonyme)</li>
-      <li>Année de naissance</li>
-      <li>Sexe</li>
-      <li>Source de découverte de l'application (optionnel)</li>
+      <li>Année de naissance <em>(facultatif)</em></li>
+      <li>Sexe <em>(facultatif)</em></li>
     </ul>
 
     <h3>Données créatives</h3>
@@ -222,6 +221,7 @@
       <tr><th>Donnée</th><th>Finalité</th></tr>
       <tr><td>Email, mot de passe</td><td>Authentification et sécurité du compte</td></tr>
       <tr><td>Nom d'auteur, profil</td><td>Personnalisation de l'expérience</td></tr>
+      <tr><td>Année de naissance, sexe <em>(facultatifs)</em></td><td>Connaître la répartition de notre audience, par tranche d'âge et par sexe, afin d'adapter l'application. Ces deux champs ne sont jamais obligatoires, et l'application fonctionne entièrement sans eux.</td></tr>
       <tr><td>Romans, chapitres, personnages</td><td>Stockage de votre travail créatif</td></tr>
       <tr><td>Historique de conversation</td><td>Continuité de l'aide narrative entre les sessions</td></tr>
       <tr><td>Journaux d'erreurs</td><td>Amélioration de la stabilité de l'application</td></tr>
@@ -230,13 +230,14 @@
 
   <section>
     <h2>4. Avec qui partageons-nous vos données ?</h2>
-    <p>Léa fait appel à des prestataires techniques pour fonctionner. Votre contenu créatif (texte de chapitres, fiches personnages, historique de conversations) est transmis à ces services pour générer les réponses de l'IA :</p>
+    <p>Léa fait appel à des prestataires techniques pour fonctionner. Votre contenu créatif (texte de chapitres, fiches personnages, historique de conversations) est transmis à certains d'entre eux ; les autres n'en reçoivent rien. Le rôle de chacun est indiqué ci-dessous :</p>
 
     <h3>Anthropic (États-Unis)</h3>
     <p>Votre historique de conversation et le contexte de votre roman sont transmis à Claude (Anthropic) pour générer les réponses de Léa. <a href="https://www.anthropic.com/privacy" target="_blank">Politique de confidentialité Anthropic</a></p>
 
     <h3>Google (États-Unis)</h3>
-    <p>Le texte de vos chapitres et vos fiches personnages sont transmis à Gemini (Google) pour générer les résumés automatiques et les portraits de personnages. <a href="https://policies.google.com/privacy" target="_blank">Politique de confidentialité Google</a></p>
+    <p>Le texte de vos chapitres et vos fiches personnages sont transmis à Gemini (Google) pour générer les résumés automatiques et les portraits de personnages.</p>
+    <p>Le texte de vos chapitres est <strong>également</strong> transmis à Google pour alimenter la recherche dans votre roman : chaque chapitre est découpé en passages, et chaque passage est converti en représentation numérique par un modèle d'indexation (<em>embeddings</em>). Les termes que vous saisissez dans le champ de recherche sont transmis de la même façon. <a href="https://policies.google.com/privacy" target="_blank">Politique de confidentialité Google</a></p>
 
     <h3>Supabase (États-Unis — AWS us-east-1)</h3>
     <p>Toutes vos données sont stockées sur les serveurs de Supabase. <a href="https://supabase.com/privacy" target="_blank">Politique de confidentialité Supabase</a></p>
@@ -247,12 +248,19 @@
     <h3>Sentry (États-Unis)</h3>
     <p>Les journaux d'erreurs techniques anonymisés sont transmis à Sentry. <a href="https://sentry.io/privacy/" target="_blank">Politique de confidentialité Sentry</a></p>
 
+    <h3>Resend</h3>
+    <p>Votre adresse email est transmise à Resend, qui envoie les messages de service de l'application : confirmation d'inscription, réinitialisation de mot de passe, changement d'adresse email, et confirmation de suppression de compte. Resend ne reçoit aucun de vos textes. <a href="https://resend.com/legal/privacy-policy" target="_blank">Politique de confidentialité Resend</a></p>
+
+    <h3>Expo</h3>
+    <p>Expo construit l'application et en diffuse les mises à jour. Ce service ne reçoit ni vos textes ni vos données de compte. <a href="https://expo.dev/privacy" target="_blank">Politique de confidentialité Expo</a></p>
+
     <p><strong>Nous ne vendons pas vos données. Nous ne les partageons avec aucun annonceur.</strong></p>
   </section>
 
   <section>
     <h2>5. Transfert de données hors de l'Union européenne</h2>
     <p>Nos prestataires sont hébergés aux États-Unis. Ce transfert est encadré par le EU-US Data Privacy Framework, auquel Supabase, Railway, Anthropic, Google et Sentry adhèrent.</p>
+    <p><strong style="color:#b4451f">⚠️ À COMPLÉTER AVANT PUBLICATION : localisation d'hébergement de Resend et d'Expo, et leur adhésion — ou non — au EU-US Data Privacy Framework. Non vérifié, donc non affirmé ici.</strong></p>
   </section>
 
   <section>
@@ -261,7 +269,9 @@
       <li>Données de compte et contenu créatif : conservés tant que votre compte est actif</li>
       <li>Chapitres supprimés : placés en corbeille pendant 15 jours, puis supprimés définitivement</li>
       <li>Journaux d'erreurs : 90 jours (politique Sentry)</li>
-      <li>Données de compte inactif : nous nous réservons le droit de supprimer les comptes inactifs depuis plus de 24 mois après notification préalable</li>
+      <li>Historique de vos conversations avec Léa : conservé tant que votre compte est actif. Il n'existe aucune suppression automatique de cet historique ; vous pouvez le vider vous-même depuis l'application en clôturant un chapitre.</li>
+      <li>Tokens de session : votre jeton d'accès expire au bout d'une heure et est renouvelé automatiquement pendant que vous utilisez l'application. Les jetons sont effacés de votre appareil lorsque vous vous déconnectez. <strong style="color:#b4451f">⚠️ À COMPLÉTER AVANT PUBLICATION : durée de vie du jeton de renouvellement (refresh token) — valeur non vérifiée.</strong></li>
+      <li>Comptes inactifs : un compte sans aucune connexion depuis <strong>24 mois</strong> reçoit un email d'avertissement, puis est supprimé <strong>15 jours</strong> plus tard. Une simple reconnexion dans ce délai annule la suppression et il n'y a rien d'autre à faire. La suppression efface le compte et l'intégralité de son contenu.</li>
     </ul>
   </section>
 
@@ -270,10 +280,12 @@
     <p>Conformément au RGPD, vous disposez des droits suivants :</p>
     <ul>
       <li><strong>Droit d'accès</strong> : obtenir une copie de vos données</li>
-      <li><strong>Droit de rectification</strong> : corriger vos données dans l'écran Profil de l'application</li>
-      <li><strong>Droit à l'effacement</strong> : supprimer votre compte et toutes vos données depuis l'écran Profil → Supprimer mon compte. La suppression est immédiate et définitive.</li>
+      <li><strong>Droit de rectification</strong> : corriger vos données dans l'écran <em>Profil</em> de l'application</li>
+      <li><strong>Droit à l'effacement</strong> : supprimer votre compte et toutes vos données depuis l'écran <em>Paramètres</em> → <em>Supprimer mon compte</em>. La suppression est immédiate et définitive.</li>
       <li><strong>Droit à la portabilité</strong> : demander l'export de vos données</li>
       <li><strong>Droit d'opposition</strong> : vous opposer à certains traitements</li>
+      <li><strong>Droit à la limitation du traitement</strong> : demander que vos données soient conservées sans être utilisées</li>
+      <li><strong>Droit de réclamation</strong> : si vous estimez que vos droits ne sont pas respectés, vous pouvez saisir la CNIL — 3 place de Fontenoy, TSA 80715, 75334 Paris Cedex 07 — <a href="https://www.cnil.fr" target="_blank">cnil.fr</a></li>
     </ul>
     <p>Pour exercer vos droits : <a href="mailto:leavotreplume@gmail.com">leavotreplume@gmail.com</a></p>
   </section>
@@ -290,7 +302,7 @@
 
   <section>
     <h2>9. Données des mineurs</h2>
-    <p>Léa est accessible à tous publics. Nous ne collectons pas sciemment de données personnelles d'enfants de moins de 13 ans sans le consentement d'un parent ou tuteur légal. Si vous êtes parent et pensez que votre enfant nous a fourni des données sans votre accord, contactez-nous à <a href="mailto:leavotreplume@gmail.com">leavotreplume@gmail.com</a>.</p>
+    <p>Léa s'adresse aux personnes de <strong>16 ans et plus</strong>. Nous ne collectons pas sciemment de données personnelles de personnes de moins de 16 ans. Si vous êtes parent et pensez que votre enfant nous a fourni des données, contactez-nous à <a href="mailto:leavotreplume@gmail.com">leavotreplume@gmail.com</a> : nous supprimerons le compte et son contenu.</p>
   </section>
 
   <section>
